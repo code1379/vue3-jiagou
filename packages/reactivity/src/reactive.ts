@@ -1,29 +1,11 @@
 import { isObject } from "@coco/shared";
+import { ReactiveFlags, mutableHandler } from "./baseHandler";
 
-const enum ReactiveFlags {
-  "IS_REACTIVE" = "__v_isReactive",
-}
 export function reactive(target) {
   return createReactiveObject(target);
 }
 
 const reactiveMap = new WeakMap(); // 防止内存泄漏
-
-// 响应式对象实现逻辑
-const mutableHandler = {
-  // 原始对象，属性，代理对象
-  get(target, key, receiver) {
-    console.log("属性在 effect 中被使用了");
-    if (key === ReactiveFlags.IS_REACTIVE) {
-      return true;
-    }
-    return Reflect.get(target, key, receiver);
-  },
-  set(target, key, value, receiver) {
-    console.log("需要让 effect 重新执行");
-    return Reflect.set(target, key, value, receiver);
-  },
-};
 function createReactiveObject(target) {
   // 不是对象直接返回
   if (!isObject(target)) return;
