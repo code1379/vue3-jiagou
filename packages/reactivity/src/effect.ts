@@ -1,4 +1,19 @@
 export let activeEffect = undefined;
+
+// effect 重新执行之前，清除之前的依赖收集
+// deps = [Set(e1), Set(e1, e2)]
+// 找到 deps 中的 set，清理掉里面的 effect
+function cleanupEffect(effect) {
+  const deps = effect.deps;
+  if (deps.length) {
+    for (let i = 0; i < deps.length; i++) {
+      const effects = deps[i];
+      effects.delete(effect); // 删除掉 set 中的 effect
+    }
+  }
+  effect.deps.length = 0;
+}
+
 class ReactiveEffect {
   parent: ReactiveEffect | undefined = undefined;
   deps = []; // effect 中要记录那些属性是在effect中调用的
@@ -9,6 +24,7 @@ class ReactiveEffect {
     try {
       this.parent = activeEffect;
       activeEffect = this;
+      cleanupEffect(this);
       return this.fn(); // 会触发属性的 get
     } finally {
       // effect(() => {}); state.xxx = "a"; effect 执行完毕之后，后面的代码不需要进行依赖收集

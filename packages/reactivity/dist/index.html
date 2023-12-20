@@ -130,8 +130,7 @@
   </script> -->
 
   <!-- 9. 嵌套 effect 中修改依赖项的值 -->
-
-  <script type="module">
+  <!-- <script type="module">
     import { reactive, effect } from './reactivity.js'
     const data = { name: 'zhufeng', age: 30, address: "wuxi" }
     const state = reactive(data)
@@ -150,6 +149,32 @@
     // e2
     // => 修改了 age 导致 e1 执行。此时下面的 state.name 还没有做依赖收集
     // => name -> Set(e2)
+  </script> -->
+
+  <!-- 10. 依赖需要清理 -->
+  <script type="module">
+    import { reactive, effect } from './reactivity.js'
+    const data = { name: 'zhufeng', age: 30, address: "wuxi", flag: true }
+    const state = reactive(data)
+    effect(() => {
+      app.innerHTML = state.flag ? state.name : state.age
+    })
+
+    setTimeout(() => {
+      state.flag = false; // 会显示 age
+      setTimeout(() => {
+        state.name = "dell"; // 需要更新吗？不需要
+      }, 1000)
+    }, 1000)
+
+    // => flag: Set(e1) name: Set(e1) => e1.deps = [ Set(e1) （flag的） , Set(e1) （name 的）]
+    // 1s 后 flag 变为 true 触发 flag 收集的 effects 执行
+    //    effects = Set(e1) （effects.forEach( e => e.run() )）
+    // effect.run 时，清除之前的依赖项，activeEffect = e1， 会将 deps 中所有 Set 中的 e1 都清理掉，之后再次进行依赖收集
+    //    相当于 run 的时候，将 effects 中的一项删掉了
+    //    => flag: Set(e1) name: Set() age: Set(e1) => e1.deps = [ Set(e1) （flag的） , Set(e1) （age 的）] 重新收集
+    //    effects 中又 add 了一项
+    // ! 相当于 我们在 effects 中 删除了一项又添加了一项
   </script>
 </body>
 

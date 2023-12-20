@@ -5,6 +5,16 @@ function isObject(value) {
 
 // packages/reactivity/src/effect.ts
 var activeEffect = void 0;
+function cleanupEffect(effect2) {
+  const deps = effect2.deps;
+  if (deps.length) {
+    for (let i = 0; i < deps.length; i++) {
+      const effects = deps[i];
+      effects.delete(effect2);
+    }
+  }
+  effect2.deps.length = 0;
+}
 var ReactiveEffect = class {
   // effect 中要记录那些属性是在effect中调用的
   constructor(fn) {
@@ -16,6 +26,7 @@ var ReactiveEffect = class {
     try {
       this.parent = activeEffect;
       activeEffect = this;
+      cleanupEffect(this);
       return this.fn();
     } finally {
       activeEffect = this.parent;
@@ -72,7 +83,7 @@ function trigger(target, key, newValue, oldValue) {
     return;
   const effects = depsMap.get(key);
   if (effects.size > 0) {
-    effects.forEach((effect2) => {
+    [...effects].forEach((effect2) => {
       if (effect2 !== activeEffect && !isParentEffect(effect2)) {
         effect2.run();
       }
@@ -80,7 +91,7 @@ function trigger(target, key, newValue, oldValue) {
   }
 }
 function isParentEffect(effect2) {
-  let currentEffect = activeEffect.parent;
+  let currentEffect = activeEffect?.parent;
   while (currentEffect) {
     if (currentEffect === effect2) {
       return true;
