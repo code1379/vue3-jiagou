@@ -114,7 +114,7 @@
   </script> -->
 
   <!-- 8. effect 中修改被依赖收集的值 -->
-  <script type="module">
+  <!-- <script type="module">
     import { reactive, effect } from './reactivity.js'
     const data = { name: 'zhufeng', age: 30, address: "wuxi" }
     const state = reactive(data)
@@ -127,8 +127,30 @@
     setTimeout(() => {
       state.age = 18
     }, 1000)
-  </script>
+  </script> -->
 
+  <!-- 9. 嵌套 effect 中修改依赖项的值 -->
+
+  <script type="module">
+    import { reactive, effect } from './reactivity.js'
+    const data = { name: 'zhufeng', age: 30, address: "wuxi" }
+    const state = reactive(data)
+    effect(() => {
+      console.log("effect1 run", state)
+      app.innerHTML = state.age
+      effect(() => {
+        console.log("effect2 run", state)
+        state.age = Math.random();
+        app.innerHTML = state.name;
+      })
+    })
+
+    // e1 
+    // => age -> Set(e1)
+    // e2
+    // => 修改了 age 导致 e1 执行。此时下面的 state.name 还没有做依赖收集
+    // => name -> Set(e2)
+  </script>
 </body>
 
 </html>

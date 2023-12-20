@@ -64,9 +64,25 @@ function trigger(target, key, newValue, oldValue) {
   if (effects.size > 0) {
     effects.forEach((effect) => {
       // 当前正在执行的和要执行的 effect 是同一个 effect，就屏蔽掉
-      if (effect !== activeEffect) {
+      // if (effect !== activeEffect && effect !== activeEffect.parent) {
+      if (effect !== activeEffect && !isParentEffect(effect)) {
         effect.run();
       }
     });
   }
+}
+
+// 递归判断是否为孩子
+// e1 => age -> Set(e1)
+// e2 中修改了 age 的值， e2.parent 是 e1， 也就是当前的 activeEffect.parent
+function isParentEffect(effect) {
+  let currentEffect = activeEffect.parent;
+  while (currentEffect) {
+    if (currentEffect === effect) {
+      return true;
+    }
+    currentEffect = currentEffect.parent;
+  }
+
+  return false;
 }

@@ -73,11 +73,21 @@ function trigger(target, key, newValue, oldValue) {
   const effects = depsMap.get(key);
   if (effects.size > 0) {
     effects.forEach((effect2) => {
-      if (effect2 !== activeEffect) {
+      if (effect2 !== activeEffect && !isParentEffect(effect2)) {
         effect2.run();
       }
     });
   }
+}
+function isParentEffect(effect2) {
+  let currentEffect = activeEffect.parent;
+  while (currentEffect) {
+    if (currentEffect === effect2) {
+      return true;
+    }
+    currentEffect = currentEffect.parent;
+  }
+  return false;
 }
 
 // packages/reactivity/src/reactive.ts
