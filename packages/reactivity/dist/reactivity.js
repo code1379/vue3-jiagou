@@ -13,6 +13,7 @@ var ReactiveEffect = class {
     this.deps = [];
   }
   run() {
+    console.log("run");
     try {
       this.parent = activeEffect;
       activeEffect = this;
@@ -39,17 +40,21 @@ var mutableHandler = {
     return Reflect.get(target, key, receiver);
   },
   set(target, key, value, receiver) {
-    console.log("\u8BBE\u7F6E\u65B0\u7684\u503C\u65F6\uFF0C\u89E6\u53D1\u66F4\u65B0");
-    return Reflect.set(target, key, value, receiver);
+    let oldValue = target[key];
+    const flag = Reflect.set(target, key, value, receiver);
+    if (oldValue !== value) {
+      console.log("\u8BBE\u7F6E\u65B0\u7684\u503C\u65F6\uFF0C\u89E6\u53D1\u66F4\u65B0");
+      trigger(target, key, value, oldValue);
+    }
+    return flag;
   }
 };
-var targeMap = /* @__PURE__ */ new WeakMap();
+var targetMap = /* @__PURE__ */ new WeakMap();
 function track(target, key) {
   if (activeEffect) {
-    debugger;
-    let depsMap = targeMap.get(target);
+    let depsMap = targetMap.get(target);
     if (!depsMap) {
-      targeMap.set(target, depsMap = /* @__PURE__ */ new Map());
+      targetMap.set(target, depsMap = /* @__PURE__ */ new Map());
     }
     let effects = depsMap.get(key);
     if (!effects) {
@@ -60,6 +65,18 @@ function track(target, key) {
       effects.add(activeEffect);
       activeEffect.deps.push(effects);
     }
+  }
+}
+function trigger(target, key, newValue, oldValue) {
+  const depsMap = targetMap.get(target);
+  if (!depsMap)
+    return;
+  const effects = depsMap.get(key);
+  if (effects.size > 0) {
+    effects.forEach((effect2) => {
+      console.log("effect", effect2);
+      effect2.run();
+    });
   }
 }
 

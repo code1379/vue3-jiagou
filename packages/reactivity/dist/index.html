@@ -88,15 +88,29 @@
   </script> -->
 
   <!-- 6. 依赖收集 -->
-  <script type="module">
+  <!-- <script type="module">
     import { reactive, effect } from './reactivity.js'
     const data = { name: 'zhufeng', age: 30, address: "wuxi" }
     const state = reactive(data)
     effect(() => {
       app.innerHTML = state.name
     })
+  </script> -->
 
 
+  <!-- 7. 触发更新 -->
+  <script type="module">
+    import { reactive, effect } from './reactivity.js'
+    const data = { name: 'zhufeng', age: 30, address: "wuxi" }
+    const state = reactive(data)
+    effect(() => {
+      console.log("effect run", state)
+      app.innerHTML = state.age
+    })
+
+    setTimeout(() => {
+      state.age = 18
+    }, 1000)
   </script>
 
 </body>

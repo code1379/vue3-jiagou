@@ -15,8 +15,15 @@ export const mutableHandler = {
     return Reflect.get(target, key, receiver);
   },
   set(target, key, value, receiver) {
-    console.log("设置新的值时，触发更新");
-    return Reflect.set(target, key, value, receiver);
+    let oldValue = target[key];
+    // ! Reflect.set 必须放到 trigger 前面
+    const flag = Reflect.set(target, key, value, receiver);
+    if (oldValue !== value) {
+      console.log("设置新的值时，触发更新");
+      trigger(target, key, value, oldValue);
+    }
+
+    return flag;
   },
 };
 
@@ -25,14 +32,13 @@ export const mutableHandler = {
 // Map = { ({name: "dell", age: 18}) : name }
 // Map = { name: set(e1, e2) }
 
-const targeMap = new WeakMap();
+const targetMap = new WeakMap();
 function track(target, key) {
   if (activeEffect) {
-    debugger;
     // 当前属性是在 effect 中使用的，才收集。
-    let depsMap = targeMap.get(target); // => { ({name: "dell", age: 18}) : { name: Set(e1, e2), age: Set(e1) } }
+    let depsMap = targetMap.get(target); // => { ({name: "dell", age: 18}) : { name: Set(e1, e2), age: Set(e1) } }
     if (!depsMap) {
-      targeMap.set(target, (depsMap = new Map()));
+      targetMap.set(target, (depsMap = new Map()));
     }
     // effects 是 Set()
     let effects = depsMap.get(key);
@@ -47,5 +53,18 @@ function track(target, key) {
       // 2. effect 关联属性
       activeEffect.deps.push(effects);
     }
+  }
+}
+
+function trigger(target, key, newValue, oldValue) {
+  const depsMap = targetMap.get(target);
+  if (!depsMap) return;
+
+  const effects = depsMap.get(key);
+  if (effects.size > 0) {
+    effects.forEach((effect) => {
+      console.log("effect", effect);
+      effect.run();
+    });
   }
 }
