@@ -1,5 +1,2 @@
-import { isObject } from "@coco/shared";
-
-console.log(isObject({}));
-
-export { isObject };
+export * from "./reactive";
+export * from "./effect";

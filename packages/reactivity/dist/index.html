@@ -8,11 +8,28 @@
 </head>
 
 <body>
+  <div id="app"></div>
+  <!-- demo -->
+  <!-- <script type="module">
+    import { reactive, effect } from '/node_modules/@vue/reactivity/dist/reactivity.esm-browser.js'
 
+    const state = reactive({ name: 'zhufeng', age: 30 })
+
+    effect(() => {
+      app.innerHTML = state.name + state.age
+    })
+
+    setTimeout(() => {
+      state.age++
+    }, 1000)
+  </script> -->
+
+  <!-- 1. 基本的 proxy 实现 -->
   <script type="module">
-    import { isObject } from './reactivity.js'
-    console.log("11111111111")
-    console.log(isObject({}))
+    import { reactive, effect } from './reactivity.js'
+    const data = { name: 'zhufeng', age: 30 }
+    const state = reactive(data)
+    console.log('state', state)
   </script>
 </body>
 
