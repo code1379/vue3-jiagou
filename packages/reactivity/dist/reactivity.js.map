@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../shared/src/index.ts", "../src/index.ts"],
+  "sourcesContent": ["export function isObject(value) {\n  return typeof value === \"object\" && value !== null;\n}\n\nexport function isFunction(value) {\n  return typeof value === \"function\";\n}\n", "import { isObject } from \"@coco/shared\";\n\nconsole.log(isObject({}));\n\nexport { isObject };\n"],
+  "mappings": ";AAAO,SAAS,SAAS,OAAO;AAC9B,SAAO,OAAO,UAAU,YAAY,UAAU;AAChD;;;ACAA,QAAQ,IAAI,SAAS,CAAC,CAAC,CAAC;",
+  "names": []
+}

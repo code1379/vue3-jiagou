@@ -3,13 +3,16 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "node scripts/dev reactivity -f esm"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "esbuild": "^0.19.10",
+    "minimist": "^1.2.8",
     "typescript": "^5.3.3"
   }
 }
