@@ -1,15 +1,17 @@
 export let activeEffect = undefined;
 class ReactiveEffect {
+  parent: ReactiveEffect | undefined = undefined;
   constructor(public fn) {}
   run() {
     // 当运行的时候，我们需要将属性和对应的 effect 关联起来
     // 利用 js 单线程的特性，先放在全局，再取值
     try {
+      this.parent = activeEffect;
       activeEffect = this;
       return this.fn(); // 会触发属性的 get
     } finally {
       // effect(() => {}); state.xxx = "a"; effect 执行完毕之后，后面的代码不需要进行依赖收集
-      activeEffect = undefined;
+      activeEffect = this.parent;
     }
   }
 }

@@ -42,13 +42,15 @@ var activeEffect = void 0;
 var ReactiveEffect = class {
   constructor(fn) {
     this.fn = fn;
+    this.parent = void 0;
   }
   run() {
     try {
+      this.parent = activeEffect;
       activeEffect = this;
       return this.fn();
     } finally {
-      activeEffect = void 0;
+      activeEffect = this.parent;
     }
   }
 };
