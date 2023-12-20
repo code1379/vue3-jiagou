@@ -3,8 +3,9 @@ export function reactive(target) {
   return createReactiveObject(target);
 }
 
-// 响应式对象实现逻辑
+const reactiveMap = new WeakMap(); // 防止内存泄漏
 
+// 响应式对象实现逻辑
 const mutableHandler = {
   // 原始对象，属性，代理对象
   get(target, key, receiver) {
@@ -20,7 +21,11 @@ function createReactiveObject(target) {
   // 不是对象直接返回
   if (!isObject(target)) return;
 
-  const proxy = new Proxy(target, mutableHandler);
+  // 防止同一个对象被代理多次，返回的永远是同一个代理对象
+  let existingProxy = reactiveMap.get(target);
+  if (existingProxy) return existingProxy;
 
+  const proxy = new Proxy(target, mutableHandler);
+  reactiveMap.set(target, proxy);
   return proxy;
 }

@@ -7,6 +7,7 @@ function isObject(value) {
 function reactive(target) {
   return createReactiveObject(target);
 }
+var reactiveMap = /* @__PURE__ */ new WeakMap();
 var mutableHandler = {
   // 原始对象，属性，代理对象
   get(target, key, receiver) {
@@ -21,7 +22,11 @@ var mutableHandler = {
 function createReactiveObject(target) {
   if (!isObject(target))
     return;
+  let existingProxy = reactiveMap.get(target);
+  if (existingProxy)
+    return existingProxy;
   const proxy = new Proxy(target, mutableHandler);
+  reactiveMap.set(target, proxy);
   return proxy;
 }
 

@@ -25,11 +25,20 @@
   </script> -->
 
   <!-- 1. 基本的 proxy 实现 -->
-  <script type="module">
+  <!-- <script type="module">
     import { reactive, effect } from './reactivity.js'
     const data = { name: 'zhufeng', age: 30 }
     const state = reactive(data)
     console.log('state', state)
+  </script> -->
+
+  <!-- 2. 多次代理同一个对象 -->
+  <script type="module">
+    import { reactive, effect } from './reactivity.js'
+    const data = { name: 'zhufeng', age: 30 }
+    const state1 = reactive(data)
+    const state2 = reactive(data)
+    console.log("state1 === state2", state1 === state2)
   </script>
 </body>
 
