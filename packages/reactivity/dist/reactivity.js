@@ -38,9 +38,26 @@ function createReactiveObject(target) {
 }
 
 // packages/reactivity/src/effect.ts
-function effect() {
+var activeEffect = void 0;
+var ReactiveEffect = class {
+  constructor(fn) {
+    this.fn = fn;
+  }
+  run() {
+    try {
+      activeEffect = this;
+      return this.fn();
+    } finally {
+      activeEffect = void 0;
+    }
+  }
+};
+function effect(fn) {
+  const _effect = new ReactiveEffect(fn);
+  _effect.run();
 }
 export {
+  activeEffect,
   effect,
   reactive
 };

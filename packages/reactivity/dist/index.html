@@ -42,13 +42,23 @@
   </script> -->
 
   <!-- 3. proxy 中传递代理过后的对象 -->
-  <script type="module">
+  <!-- <script type="module">
     import { reactive, effect } from './reactivity.js'
     const data = { name: 'zhufeng', age: 30 }
     // state1被代理过后，一定被劫持了 get 和 set 方法
     const state1 = reactive(data)
     const state2 = reactive(state1)
     console.log("state1 === state2", state1 === state2)
+  </script> -->
+
+  <!-- 4. 结合 effect 基本使用，未收集依赖-->
+  <script type="module">
+    import { reactive, effect } from './reactivity.js'
+    const data = { name: 'zhufeng', age: 30 }
+    const state = reactive(data)
+    effect(() => {
+      app.innerHTML = state.name + state.age
+    })
   </script>
 </body>
 
