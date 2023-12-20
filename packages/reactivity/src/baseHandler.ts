@@ -63,8 +63,10 @@ function trigger(target, key, newValue, oldValue) {
   const effects = depsMap.get(key);
   if (effects.size > 0) {
     effects.forEach((effect) => {
-      console.log("effect", effect);
-      effect.run();
+      // 当前正在执行的和要执行的 effect 是同一个 effect，就屏蔽掉
+      if (effect !== activeEffect) {
+        effect.run();
+      }
     });
   }
 }

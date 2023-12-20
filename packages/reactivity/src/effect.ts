@@ -4,7 +4,6 @@ class ReactiveEffect {
   deps = []; // effect 中要记录那些属性是在effect中调用的
   constructor(public fn) {}
   run() {
-    console.log("run");
     // 当运行的时候，我们需要将属性和对应的 effect 关联起来
     // 利用 js 单线程的特性，先放在全局，再取值
     try {

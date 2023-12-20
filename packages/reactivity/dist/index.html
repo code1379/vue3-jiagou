@@ -99,6 +99,21 @@
 
 
   <!-- 7. 触发更新 -->
+  <!-- <script type="module">
+    import { reactive, effect } from './reactivity.js'
+    const data = { name: 'zhufeng', age: 30, address: "wuxi" }
+    const state = reactive(data)
+    effect(() => {
+      console.log("effect run", state)
+      app.innerHTML = state.age
+    })
+
+    setTimeout(() => {
+      state.age = 18
+    }, 1000)
+  </script> -->
+
+  <!-- 8. effect 中修改被依赖收集的值 -->
   <script type="module">
     import { reactive, effect } from './reactivity.js'
     const data = { name: 'zhufeng', age: 30, address: "wuxi" }
@@ -106,6 +121,7 @@
     effect(() => {
       console.log("effect run", state)
       app.innerHTML = state.age
+      state.age = Math.random()
     })
 
     setTimeout(() => {

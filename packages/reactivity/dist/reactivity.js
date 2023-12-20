@@ -13,7 +13,6 @@ var ReactiveEffect = class {
     this.deps = [];
   }
   run() {
-    console.log("run");
     try {
       this.parent = activeEffect;
       activeEffect = this;
@@ -74,8 +73,9 @@ function trigger(target, key, newValue, oldValue) {
   const effects = depsMap.get(key);
   if (effects.size > 0) {
     effects.forEach((effect2) => {
-      console.log("effect", effect2);
-      effect2.run();
+      if (effect2 !== activeEffect) {
+        effect2.run();
+      }
     });
   }
 }
