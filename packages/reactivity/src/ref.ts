@@ -43,3 +43,11 @@ class ObjectRefImpl {
 export function toRef(object, key) {
   return new ObjectRefImpl(object, key);
 }
+
+export function toRefs(object) {
+  let res = {};
+  for (let key in object) {
+    res[key] = toRef(object, key);
+  }
+  return res;
+}

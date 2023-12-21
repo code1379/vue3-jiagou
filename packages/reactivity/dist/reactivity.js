@@ -277,6 +277,13 @@ var ObjectRefImpl = class {
 function toRef(object, key) {
   return new ObjectRefImpl(object, key);
 }
+function toRefs(object) {
+  let res = {};
+  for (let key in object) {
+    res[key] = toRef(object, key);
+  }
+  return res;
+}
 export {
   ReactiveEffect,
   activeEffect,
@@ -287,6 +294,7 @@ export {
   ref,
   toReactive,
   toRef,
+  toRefs,
   watch,
   watchEffect
 };

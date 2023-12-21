@@ -109,7 +109,7 @@
   </script> -->
 
   <!-- 8. toRef 的实现 -->
-  <script type="module">
+  <!-- <script type="module">
     // import { watchEffect, ref, reactive, toRef } from '/node_modules/@vue/runtime-dom/dist/runtime-dom.esm-browser.js'
     import { watchEffect, ref, reactive, toRef } from './reactivity.js'
     const state1 = reactive({ name: "dell" })
@@ -124,7 +124,26 @@
     setTimeout(() => {
       r.name.value = "Jack"
     }, 1000)
+  </script> -->
+
+  <!-- 9. toRefs -->
+  <script type="module">
+    // import { watchEffect, ref, reactive, toRefs } from '/node_modules/@vue/runtime-dom/dist/runtime-dom.esm-browser.js'
+    import { watchEffect, ref, reactive, toRef, toRefs } from './reactivity.js'
+    const state1 = reactive({ name: "dell" })
+    const state2 = reactive({ age: 18 })
+
+    const r = { ...toRefs(state1), ...toRefs(state2) }
+
+    watchEffect(() => {
+      app.innerHTML = r.name.value + r.age.value
+    })
+
+    setTimeout(() => {
+      r.name.value = "Jack"
+    }, 1000)
   </script>
+
 </body>
 
 </html>
