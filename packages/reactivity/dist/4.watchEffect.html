@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="app"></div>
+
+  <!-- 1. watchEffect 的基本用法  -->
+  <script type="module">
+    import { reactive, effect, computed, watch, watchEffect } from '/node_modules/@vue/runtime-dom/dist/runtime-dom.esm-browser.js'
+    const state = reactive({ firstname: "dell", lastname: "lee", age: 30 })
+    // 分页请求，页面发生变化之后。 pageSize search
+    // watch([() => state.pageSize, () => state.search], () => {})
+    watchEffect(() => {
+      app.innerHTML = state.firstname
+    })
+
+    setTimeout(() => {
+      state.firstname = "Jack"
+    }, 1000)
+  </script>
+
+</body>
+
+</html>
