@@ -95,7 +95,7 @@
   </script> -->
 
   <!-- 6. 响应式 中可以使用-->
-  <script type="module">
+  <!-- <script type="module">
     // computed watch watchEffect -> 基于 effect
     import { reactive, effect, computed } from '/node_modules/@vue/reactivity/dist/reactivity.esm-browser.js'
     const state = reactive({ firstname: "dell", lastname: "lee", age: 30 })
@@ -119,12 +119,21 @@
     setTimeout(() => {
       state.firstname = "jelly"
     }, 1000)
-  </script>
-
-  <!--  -->
-  <!-- <script type="module">
-    import { reactive, effect } from './reactivity.js'
   </script> -->
+
+  <!-- 1. 基本的实现 通过 .value 访问 computed 的计算值-->
+  <script type="module">
+    import { reactive, effect, computed } from './reactivity.js'
+
+    const state = reactive({ firstname: "dell", lastname: "lee", age: 30 })
+
+    const fullname = computed(() => {
+      console.log("computed")
+      return state.firstname + " " + state.lastname
+    })
+
+    console.log(fullname.value)
+  </script>
 
 
 </body>

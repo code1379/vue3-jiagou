@@ -2,6 +2,9 @@
 function isObject(value) {
   return typeof value === "object" && value !== null;
 }
+function isFunction(value) {
+  return typeof value === "function";
+}
 
 // packages/reactivity/src/effect.ts
 var activeEffect = void 0;
@@ -129,8 +132,41 @@ function createReactiveObject(target) {
   reactiveMap.set(target, proxy);
   return proxy;
 }
+
+// packages/reactivity/src/computed.ts
+var ComputedRefImpl = class {
+  constructor(getter, setter) {
+    this.getter = getter;
+    this.setter = setter;
+    this.effect = new ReactiveEffect(getter, {});
+  }
+  get value() {
+    this._value = this.effect.run();
+    return this._value;
+  }
+  set value(val) {
+    this.setter(val);
+  }
+};
+function computed(getterOrOptions) {
+  const isGetter = isFunction(getterOrOptions);
+  let getter;
+  let setter;
+  if (isGetter) {
+    getter = getterOrOptions;
+    setter = () => {
+      console.warn("Write operation failed: computed value is readonly");
+    };
+  } else {
+    getter = getterOrOptions.get;
+    setter = getterOrOptions.set;
+  }
+  return new ComputedRefImpl(getter, setter);
+}
 export {
+  ReactiveEffect,
   activeEffect,
+  computed,
   effect,
   reactive
 };

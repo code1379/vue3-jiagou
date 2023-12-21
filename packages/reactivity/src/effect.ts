@@ -14,7 +14,7 @@ function cleanupEffect(effect) {
   effect.deps.length = 0;
 }
 
-class ReactiveEffect {
+export class ReactiveEffect {
   parent: ReactiveEffect | undefined = undefined;
   deps = []; // effect 中要记录那些属性是在effect中调用的
   constructor(public fn, public scheduler) {}
