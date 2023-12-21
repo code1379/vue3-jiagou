@@ -16,7 +16,7 @@ function traverse(source, seen = new Set()) {
   return source;
 }
 
-export function watch(source, cb, options: any = {}) {
+function doWatch(source, cb, options) {
   let getter;
   if (isReactive(source)) {
     // 遍历这个对象上的所有属性进行监听（会递归 - 性能不高）
@@ -32,10 +32,14 @@ export function watch(source, cb, options: any = {}) {
     clean = fn;
   };
   const job = () => {
-    if (clean) clean();
-    const newValue = effect.run();
-    cb(newValue, oldValue, onCleanup);
-    oldValue = newValue;
+    if (cb) {
+      if (clean) clean();
+      const newValue = effect.run();
+      cb(newValue, oldValue, onCleanup);
+      oldValue = newValue;
+    } else {
+      effect.run();
+    }
   };
 
   // 创建响应式，并没有收集对应的依赖
@@ -48,4 +52,12 @@ export function watch(source, cb, options: any = {}) {
 
   // 不管怎么样，都要 执行 effect.run 进行依赖收集
   oldValue = effect.run();
+}
+
+export function watch(source, cb, options: any = {}) {
+  doWatch(source, cb, options);
+}
+
+export function watchEffect(fn, options: any = {}) {
+  doWatch(fn, null, options); // === effect
 }
