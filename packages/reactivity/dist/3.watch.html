@@ -27,7 +27,7 @@
     watch(state, (newVal, oldVal) => {
       console.log(newVal, oldVal)
     }, {
-      immediate: true
+      // immediate: true
     })
 
     setTimeout(() => {
@@ -51,6 +51,37 @@
       state.firstname = "Jack"
     }, 1000)
   </script> -->
+
+
+  <!-- 3. watch 的基本实现 -->
+  <!-- <script type="module">
+    // computed watch watchEffect -> 基于 effect
+    import { reactive, effect, computed, watch } from './reactivity.js'
+    const state = reactive({ firstname: "dell", lastname: "lee", age: 30 })
+
+    watch(state, (newVal, oldVal) => {
+      console.log(newVal, oldVal)
+    }, {
+      immediate: true
+    })
+  </script> -->
+
+  <!-- 4. watch 依赖变化，执行回调 -->
+  <script type="module">
+    // computed watch watchEffect -> 基于 effect
+    import { reactive, effect, computed, watch } from './reactivity.js'
+    const state = reactive({ firstname: "dell", lastname: "lee", age: 30 })
+
+    watch(state, (newVal, oldVal) => {
+      console.log(newVal, oldVal)
+    }, {
+      immediate: true
+    })
+
+    setTimeout(() => {
+      state.firstname = "Jack"
+    }, 1000)
+  </script>
 </body>
 
 </html>
