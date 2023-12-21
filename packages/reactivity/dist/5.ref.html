@@ -25,12 +25,20 @@
   </script> -->
 
   <!-- 2. ref 的基本用法 - 对象 -->
-  <script type="module">
+  <!-- <script type="module">
     import { watchEffect, ref } from '/node_modules/@vue/runtime-dom/dist/runtime-dom.esm-browser.js'
     const person = ref({ name: "dell" })
     console.log(person.value)
+  </script> -->
+  <!-- 3. ref 的基本实现 - 没有依赖收集-->
+  <script type="module">
+    import { watchEffect, ref } from './reactivity.js'
+    const flag = ref(true)
+    // 普通值，包装成对象（装包）
+    watchEffect(() => {
+      app.innerHTML = flag.value ? 1 : 0
+    })
   </script>
-
 </body>
 
 </html>

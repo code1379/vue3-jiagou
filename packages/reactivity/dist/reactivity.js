@@ -141,6 +141,9 @@ function createReactiveObject(target) {
 function isReactive(target) {
   return !!(target && target["__v_isReactive" /* IS_REACTIVE */]);
 }
+function toReactive(target) {
+  return isObject(target) ? reactive(target) : target;
+}
 
 // packages/reactivity/src/computed.ts
 var ComputedRefImpl = class {
@@ -233,6 +236,27 @@ function watch(source, cb, options = {}) {
 function watchEffect(fn, options = {}) {
   doWatch(fn, null, options);
 }
+
+// packages/reactivity/src/ref.ts
+var RefImpl = class {
+  // 内部采用类的属性访问器 -> Object.defineProperty
+  constructor(rawValue) {
+    this.rawValue = rawValue;
+    this._value = toReactive(rawValue);
+  }
+  get value() {
+    return this._value;
+  }
+  set value(newValue) {
+    if (newValue !== this.rawValue) {
+      this.rawValue = newValue;
+      this._value = toReactive(newValue);
+    }
+  }
+};
+function ref(value) {
+  return new RefImpl(value);
+}
 export {
   ReactiveEffect,
   activeEffect,
@@ -240,6 +264,8 @@ export {
   effect,
   isReactive,
   reactive,
+  ref,
+  toReactive,
   watch,
   watchEffect
 };

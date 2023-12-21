@@ -26,3 +26,7 @@ function createReactiveObject(target) {
 export function isReactive(target) {
   return !!(target && target[ReactiveFlags.IS_REACTIVE]);
 }
+
+export function toReactive(target) {
+  return isObject(target) ? reactive(target) : target;
+}
