@@ -242,15 +242,20 @@ var RefImpl = class {
   // 内部采用类的属性访问器 -> Object.defineProperty
   constructor(rawValue) {
     this.rawValue = rawValue;
+    this.deps = /* @__PURE__ */ new Set();
     this._value = toReactive(rawValue);
   }
   get value() {
+    if (activeEffect) {
+      trackEffects(this.deps);
+    }
     return this._value;
   }
   set value(newValue) {
     if (newValue !== this.rawValue) {
       this.rawValue = newValue;
       this._value = toReactive(newValue);
+      triggerEffects(this.deps);
     }
   }
 };

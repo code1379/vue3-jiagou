@@ -31,6 +31,16 @@
     console.log(person.value)
   </script> -->
   <!-- 3. ref 的基本实现 - 没有依赖收集-->
+  <!-- <script type="module">
+    import { watchEffect, ref } from './reactivity.js'
+    const flag = ref(true)
+    // 普通值，包装成对象（装包）
+    watchEffect(() => {
+      app.innerHTML = flag.value ? 1 : 0
+    })
+  </script> -->
+
+  <!-- 4. ref 的基本实现 - 有依赖收集-->
   <script type="module">
     import { watchEffect, ref } from './reactivity.js'
     const flag = ref(true)
@@ -38,6 +48,9 @@
     watchEffect(() => {
       app.innerHTML = flag.value ? 1 : 0
     })
+    setTimeout(() => {
+      flag.value = !flag.value
+    }, 1000)
   </script>
 </body>
 
