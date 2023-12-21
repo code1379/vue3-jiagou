@@ -208,7 +208,7 @@
   </script> -->
 
   <!-- 11. 批量更新 -->
-  <script type="module">
+  <!-- <script type="module">
     import { reactive, effect } from './reactivity.js'
     const data = { name: 'zhufeng', age: 30, address: "wuxi", flag: true }
     const state = reactive(data)
@@ -235,6 +235,30 @@
     state.age = 1;
     state.age = 2;
     state.age = 3;
+  </script> -->
+
+
+  <!-- 深度代理 -->
+
+  <script type="module">
+    import { reactive, effect } from './reactivity.js'
+    const data = {
+      name: 'zhufeng', age: 30, address: "wuxi", flag: true, info: {
+        job: "前端工程师",
+        habit: "喜欢看书, 喜欢旅游, 喜欢吃吃吃"
+      }
+    }
+    const state = reactive(data)
+
+    console.log('state', state)
+    const runner = effect(() => {
+      app.innerHTML = state.info.job
+    })
+
+    setTimeout(() => {
+      state.info.job = "旅游师"
+    }, 1000)
+
   </script>
 </body>
 

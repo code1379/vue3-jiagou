@@ -48,9 +48,13 @@ var mutableHandler = {
     if (key === "__v_isReactive" /* IS_REACTIVE */) {
       return true;
     }
-    console.log("\u53D6\u503C\u7684\u65F6\u5019\u5173\u8054 effect ");
+    console.log("\u53D6\u503C\u7684\u65F6\u5019\u5173\u8054 effect \u5E76\u8FDB\u884C\u6DF1\u5EA6\u4EE3\u7406");
     track(target, key);
-    return Reflect.get(target, key, receiver);
+    let result = Reflect.get(target, key, receiver);
+    if (isObject(result)) {
+      return reactive(result);
+    }
+    return result;
   },
   set(target, key, value, receiver) {
     let oldValue = target[key];

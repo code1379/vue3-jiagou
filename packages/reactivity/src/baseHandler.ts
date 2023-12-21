@@ -1,4 +1,6 @@
+import { isObject } from "packages/shared/src";
 import { activeEffect } from "./effect";
+import { reactive } from "./reactive";
 
 export const enum ReactiveFlags {
   "IS_REACTIVE" = "__v_isReactive",
@@ -10,9 +12,14 @@ export const mutableHandler = {
     if (key === ReactiveFlags.IS_REACTIVE) {
       return true;
     }
-    console.log("取值的时候关联 effect ");
+    console.log("取值的时候关联 effect 并进行深度代理");
     track(target, key);
-    return Reflect.get(target, key, receiver);
+    let result = Reflect.get(target, key, receiver);
+    if (isObject(result)) {
+      // 如果取到的是一个对象，则需要继续将这个对象作为代理对象
+      return reactive(result);
+    }
+    return result;
   },
   set(target, key, value, receiver) {
     let oldValue = target[key];
