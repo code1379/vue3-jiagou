@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="app"></div>
+
+  <!-- 
+    /**
+     * watch 和 computed
+     * 相同点：都是基于 effect 实现的 
+     * 不同点：1. computed 目的在于计算新值，有缓存
+     *        2. watch 监控属性的变化之后，做某一件事
+    */
+  -->
+  <!-- 1. watch 的基本用法 - 监听响应式对象 -->
+  <!-- <script type="module">
+    // computed watch watchEffect -> 基于 effect
+    import { reactive, effect, computed, watch } from '/node_modules/@vue/runtime-dom/dist/runtime-dom.esm-browser.js'
+    const state = reactive({ firstname: "dell", lastname: "lee", age: 30 })
+
+    watch(state, (newVal, oldVal) => {
+      console.log(newVal, oldVal)
+    }, {
+      immediate: true
+    })
+
+    setTimeout(() => {
+      state.firstname = "Jack"
+    }, 1000)
+  </script> -->
+
+  <!-- 2. watch基本用法，监听响应式对象的某个值 -->
+  <!-- <script type="module">
+    // computed watch watchEffect -> 基于 effect
+    import { reactive, effect, computed, watch } from '/node_modules/@vue/runtime-dom/dist/runtime-dom.esm-browser.js'
+    const state = reactive({ firstname: "dell", lastname: "lee", age: 30 })
+
+    watch(() => state.firstname, (newVal, oldVal) => {
+      console.log(newVal, oldVal)
+    }, {
+      immediate: true
+    })
+
+    setTimeout(() => {
+      state.firstname = "Jack"
+    }, 1000)
+  </script> -->
+</body>
+
+</html>
