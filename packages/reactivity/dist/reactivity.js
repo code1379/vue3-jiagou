@@ -144,6 +144,7 @@ var ComputedRefImpl = class {
   constructor(getter, setter) {
     this.getter = getter;
     this.setter = setter;
+    this._dirty = true;
     this.dep = /* @__PURE__ */ new Set();
     this.effect = new ReactiveEffect(getter, () => {
       triggerEffects(this.dep);
@@ -153,7 +154,10 @@ var ComputedRefImpl = class {
     if (activeEffect) {
       trackEffects(this.dep);
     }
-    this._value = this.effect.run();
+    if (this._dirty) {
+      this._dirty = false;
+      this._value = this.effect.run();
+    }
     return this._value;
   }
   set value(val) {

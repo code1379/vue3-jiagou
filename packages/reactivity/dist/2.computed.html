@@ -136,7 +136,7 @@
   </script> -->
 
   <!-- 2. 依赖的值改变 -->
-  <script type="module">
+  <!-- <script type="module">
     import { reactive, effect, computed } from './reactivity.js'
 
     const state = reactive({ firstname: "dell", lastname: "lee", age: 30 })
@@ -162,8 +162,27 @@
   
     // 当修改 state.firstname 时，会触发 e1 重新执行， fullname 会重新计算，这个时候需要让 e2 重新执行
 
-  </script>
+  </script> -->
 
+
+  <!-- 3. 多次取值，需要缓存 -->
+  <script type="module">
+    import { reactive, effect, computed } from './reactivity.js'
+
+    const state = reactive({ firstname: "dell", lastname: "lee", age: 30 })
+
+    const fullname = computed(() => {
+      console.log("computed")
+      return state.firstname + " " + state.lastname
+    })
+
+    effect(() => {
+      console.log("fullname", fullname.value)
+      console.log("fullname", fullname.value)
+      console.log("fullname", fullname.value)
+      console.log("fullname", fullname.value)
+    })
+  </script>
 </body>
 
 </html>

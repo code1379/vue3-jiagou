@@ -5,6 +5,7 @@ import { trackEffects, triggerEffects } from "./baseHandler";
 class ComputedRefImpl {
   effect;
   _value;
+  _dirty = true;
   dep = new Set();
   constructor(public getter, public setter) {
     // 计算属性就是一个 effect，会让 getter中的属性收集这个effect（getter 就相当于）
@@ -19,9 +20,13 @@ class ComputedRefImpl {
     if (activeEffect) {
       trackEffects(this.dep);
     }
-    // 获取时，让 getter 执行，拿到返回值作为计算属性的值
-    this._value = this.effect.run();
 
+    if (this._dirty) {
+      // 再次取值的时候就不会走这里了
+      this._dirty = false;
+      // 获取时，让 getter 执行，拿到返回值作为计算属性的值
+      this._value = this.effect.run();
+    }
     return this._value;
   }
 
