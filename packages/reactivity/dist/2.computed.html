@@ -166,6 +166,25 @@
 
 
   <!-- 3. 多次取值，需要缓存 -->
+  <!-- <script type="module">
+    import { reactive, effect, computed } from './reactivity.js'
+
+    const state = reactive({ firstname: "dell", lastname: "lee", age: 30 })
+
+    const fullname = computed(() => {
+      console.log("computed")
+      return state.firstname + " " + state.lastname
+    })
+
+    effect(() => {
+      console.log("fullname", fullname.value)
+      console.log("fullname", fullname.value)
+      console.log("fullname", fullname.value)
+      console.log("fullname", fullname.value)
+    })
+  </script> -->
+
+  <!-- 4. 依赖改变需要重新计算 -->
   <script type="module">
     import { reactive, effect, computed } from './reactivity.js'
 
@@ -182,6 +201,10 @@
       console.log("fullname", fullname.value)
       console.log("fullname", fullname.value)
     })
+
+    setTimeout(() => {
+      state.firstname = "Jack"
+    }, 1000)
   </script>
 </body>
 

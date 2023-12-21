@@ -10,7 +10,10 @@ class ComputedRefImpl {
   constructor(public getter, public setter) {
     // 计算属性就是一个 effect，会让 getter中的属性收集这个effect（getter 就相当于）
     this.effect = new ReactiveEffect(getter, () => {
-      triggerEffects(this.dep);
+      if (!this._dirty) {
+        this._dirty = true; // 计算属性标记为脏值
+        triggerEffects(this.dep);
+      }
     });
   }
 

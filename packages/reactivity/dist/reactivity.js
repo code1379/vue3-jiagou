@@ -147,7 +147,10 @@ var ComputedRefImpl = class {
     this._dirty = true;
     this.dep = /* @__PURE__ */ new Set();
     this.effect = new ReactiveEffect(getter, () => {
-      triggerEffects(this.dep);
+      if (!this._dirty) {
+        this._dirty = true;
+        triggerEffects(this.dep);
+      }
     });
   }
   get value() {
