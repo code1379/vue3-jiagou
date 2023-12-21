@@ -66,8 +66,8 @@
     })
   </script> -->
 
-  <!-- 4. watch 依赖变化，执行回调 -->
-  <script type="module">
+  <!-- 4. watch 对象，依赖变化，执行回调 -->
+  <!-- <script type="module">
     // computed watch watchEffect -> 基于 effect
     import { reactive, effect, computed, watch } from './reactivity.js'
     const state = reactive({ firstname: "dell", lastname: "lee", age: 30 })
@@ -78,6 +78,32 @@
       immediate: true
     })
 
+    setTimeout(() => {
+      state.firstname = "Jack"
+    }, 1000)
+  </script> -->
+
+  <!-- 5. watch 一个函数 -->
+  <script type="module">
+    // computed watch watchEffect -> 基于 effect
+    import { reactive, effect, computed, watch } from './reactivity.js'
+    const state = reactive({ firstname: "dell", lastname: "lee", age: 30 })
+
+    // watch(() => {
+    //   state.firstname
+    //   state.lastname
+    //   state.age
+    // }, (newVal, oldVal) => {
+    //   console.log(newVal, oldVal)
+    // }, {
+    //   immediate: true
+    // })
+
+    watch(() => state.firstname, (newVal, oldVal) => {
+      console.log(newVal, oldVal)
+    }, {
+      immediate: true
+    })
     setTimeout(() => {
       state.firstname = "Jack"
     }, 1000)

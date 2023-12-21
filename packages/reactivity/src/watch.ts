@@ -1,4 +1,4 @@
-import { isObject } from "@coco/shared";
+import { isFunction, isObject } from "@coco/shared";
 import { isReactive } from "./reactive";
 import { ReactiveEffect } from "./effect";
 
@@ -21,6 +21,8 @@ export function watch(source, cb, options: any = {}) {
   if (isReactive(source)) {
     // 遍历这个对象上的所有属性进行监听（会递归 - 性能不高）
     getter = () => traverse(source);
+  } else if (isFunction(source)) {
+    getter = source;
   }
 
   let oldValue = undefined;

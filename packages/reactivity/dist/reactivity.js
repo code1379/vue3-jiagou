@@ -202,6 +202,8 @@ function watch(source, cb, options = {}) {
   let getter;
   if (isReactive(source)) {
     getter = () => traverse(source);
+  } else if (isFunction(source)) {
+    getter = source;
   }
   let oldValue = void 0;
   const job = () => {
