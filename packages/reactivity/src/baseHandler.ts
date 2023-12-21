@@ -66,7 +66,12 @@ function trigger(target, key, newValue, oldValue) {
       // 当前正在执行的和要执行的 effect 是同一个 effect，就屏蔽掉
       // if (effect !== activeEffect && effect !== activeEffect.parent) {
       if (effect !== activeEffect && !isParentEffect(effect)) {
-        effect.run();
+        // 应该执行 scheduler
+        if (effect.scheduler) {
+          effect.scheduler();
+        } else {
+          effect.run();
+        }
       }
     });
   }

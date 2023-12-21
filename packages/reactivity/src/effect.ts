@@ -17,7 +17,7 @@ function cleanupEffect(effect) {
 class ReactiveEffect {
   parent: ReactiveEffect | undefined = undefined;
   deps = []; // effect 中要记录那些属性是在effect中调用的
-  constructor(public fn) {}
+  constructor(public fn, public scheduler) {}
   run() {
     // 当运行的时候，我们需要将属性和对应的 effect 关联起来
     // 利用 js 单线程的特性，先放在全局，再取值
@@ -43,9 +43,12 @@ class ReactiveEffect {
 // 得到结论： n:n
 // * 所以我们需要 effect 记录属性，也 需要属性记录 effect
 
-export function effect(fn) {
+export function effect(fn, options: any = {}) {
   // 将用户传递的函数，变成响应式的函数
-  const _effect = new ReactiveEffect(fn);
+  const _effect = new ReactiveEffect(fn, options.scheduler);
   // 默认让用户的函数执行一次
   _effect.run();
+
+  const runner = _effect.run.bind(_effect);
+  return runner;
 }

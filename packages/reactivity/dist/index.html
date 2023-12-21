@@ -152,7 +152,7 @@
   </script> -->
 
   <!-- 10. 依赖需要清理 -->
-  <script type="module">
+  <!-- <script type="module">
     import { reactive, effect } from './reactivity.js'
     const data = { name: 'zhufeng', age: 30, address: "wuxi", flag: true }
     const state = reactive(data)
@@ -175,6 +175,66 @@
     //    => flag: Set(e1) name: Set() age: Set(e1) => e1.deps = [ Set(e1) （flag的） , Set(e1) （age 的）] 重新收集
     //    effects 中又 add 了一项
     // ! 相当于 我们在 effects 中 删除了一项又添加了一项
+  </script> -->
+
+  <!-- 11. 批量更新 - 原生 -->
+  <!-- <script type="module">
+    import { reactive, effect } from '/node_modules/@vue/reactivity/dist/reactivity.esm-browser.js'
+    const data = { name: 'zhufeng', age: 30, address: "wuxi", flag: true }
+    const state = reactive(data)
+
+    let isFlushing = false
+    // 默认每次更新数据后都会重新执行，我们希望可以合并更新 “异步更新”
+    const runner = effect(() => {
+      console.log("effect run")
+      app.innerHTML = state.age
+    }, {
+      // 调度执行
+      scheduler() {
+        if (!isFlushing) {
+          Promise.resolve().then(() => {
+            // 异步更新
+            runner()
+            isFlushing = false
+          })
+          isFlushing = true
+        }
+      }
+    })
+
+    state.age = 1;
+    state.age = 2;
+    state.age = 3;
+  </script> -->
+
+  <!-- 11. 批量更新 -->
+  <script type="module">
+    import { reactive, effect } from './reactivity.js'
+    const data = { name: 'zhufeng', age: 30, address: "wuxi", flag: true }
+    const state = reactive(data)
+
+    let isFlushing = false
+    // 默认每次更新数据后都会重新执行，我们希望可以合并更新 “异步更新”
+    const runner = effect(() => {
+      console.log("effect run")
+      app.innerHTML = state.age
+    }, {
+      // 调度执行
+      scheduler() {
+        if (!isFlushing) {
+          Promise.resolve().then(() => {
+            // 异步更新
+            runner()
+            isFlushing = false
+          })
+          isFlushing = true
+        }
+      }
+    })
+
+    state.age = 1;
+    state.age = 2;
+    state.age = 3;
   </script>
 </body>
 

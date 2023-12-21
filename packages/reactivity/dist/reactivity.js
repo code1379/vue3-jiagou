@@ -17,8 +17,9 @@ function cleanupEffect(effect2) {
 }
 var ReactiveEffect = class {
   // effect 中要记录那些属性是在effect中调用的
-  constructor(fn) {
+  constructor(fn, scheduler) {
     this.fn = fn;
+    this.scheduler = scheduler;
     this.parent = void 0;
     this.deps = [];
   }
@@ -33,9 +34,11 @@ var ReactiveEffect = class {
     }
   }
 };
-function effect(fn) {
-  const _effect = new ReactiveEffect(fn);
+function effect(fn, options = {}) {
+  const _effect = new ReactiveEffect(fn, options.scheduler);
   _effect.run();
+  const runner = _effect.run.bind(_effect);
+  return runner;
 }
 
 // packages/reactivity/src/baseHandler.ts
@@ -85,7 +88,11 @@ function trigger(target, key, newValue, oldValue) {
   if (effects.size > 0) {
     [...effects].forEach((effect2) => {
       if (effect2 !== activeEffect && !isParentEffect(effect2)) {
-        effect2.run();
+        if (effect2.scheduler) {
+          effect2.scheduler();
+        } else {
+          effect2.run();
+        }
       }
     });
   }
