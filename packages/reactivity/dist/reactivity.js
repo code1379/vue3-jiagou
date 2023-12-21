@@ -262,6 +262,21 @@ var RefImpl = class {
 function ref(value) {
   return new RefImpl(value);
 }
+var ObjectRefImpl = class {
+  constructor(object, key) {
+    this.object = object;
+    this.key = key;
+  }
+  get value() {
+    return this.object[this.key];
+  }
+  set value(val) {
+    this.object[this.key] = val;
+  }
+};
+function toRef(object, key) {
+  return new ObjectRefImpl(object, key);
+}
 export {
   ReactiveEffect,
   activeEffect,
@@ -271,6 +286,7 @@ export {
   reactive,
   ref,
   toReactive,
+  toRef,
   watch,
   watchEffect
 };

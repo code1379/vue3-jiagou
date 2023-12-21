@@ -28,3 +28,18 @@ class RefImpl {
 export function ref(value) {
   return new RefImpl(value);
 }
+
+class ObjectRefImpl {
+  constructor(public object, public key) {}
+
+  get value() {
+    return this.object[this.key];
+  }
+
+  set value(val) {
+    this.object[this.key] = val;
+  }
+}
+export function toRef(object, key) {
+  return new ObjectRefImpl(object, key);
+}

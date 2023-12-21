@@ -41,7 +41,7 @@
   </script> -->
 
   <!-- 4. ref 的基本实现 - 有依赖收集-->
-  <script type="module">
+  <!-- <script type="module">
     import { watchEffect, ref } from './reactivity.js'
     const flag = ref(true)
     // 普通值，包装成对象（装包）
@@ -50,6 +50,79 @@
     })
     setTimeout(() => {
       flag.value = !flag.value
+    }, 1000)
+  </script> -->
+
+  <!-- 5. 多个 reactive 合并 - 失败1 -->
+  <!-- <script type="module">
+    import { watchEffect, ref, reactive } from '/node_modules/@vue/runtime-dom/dist/runtime-dom.esm-browser.js'
+    // import { watchEffect, ref, reactive } from './reactivity.js'
+    const state1 = reactive({ name: "dell" })
+    const state2 = reactive({ age: 18 })
+
+    const r = { ...state1, ...state2 }
+
+    watchEffect(() => {
+      app.innerHTML = r.name + r.age
+    })
+
+    setTimeout(() => {
+      r.name = "Jack"
+    }, 1000)
+  </script> -->
+
+  <!-- 6. 将 reactive 中的某些值变为 ref -->
+  <!-- <script type="module">
+    import { watchEffect, ref, reactive } from '/node_modules/@vue/runtime-dom/dist/runtime-dom.esm-browser.js'
+    // import { watchEffect, ref, reactive } from './reactivity.js'
+    const state1 = reactive({ name: "dell" })
+    const state2 = reactive({ age: 18 })
+
+    const r = { name: ref(state1.name), age: ref(state2.age) }
+
+    watchEffect(() => {
+      app.innerHTML = r.name.value + r.age.value
+    })
+
+    setTimeout(() => {
+      r.name.value = "Jack"
+    }, 1000)
+  </script> -->
+
+
+  <!-- 7. 将 reactive 中的某些值变为 ref - 使用 toRef -->
+  <!-- <script type="module">
+    import { watchEffect, ref, reactive, toRef } from '/node_modules/@vue/runtime-dom/dist/runtime-dom.esm-browser.js'
+    // import { watchEffect, ref, reactive } from './reactivity.js'
+    const state1 = reactive({ name: "dell" })
+    const state2 = reactive({ age: 18 })
+
+    const r = { name: toRef(state1, 'name'), age: toRef(state2, 'age') }
+
+    watchEffect(() => {
+      app.innerHTML = r.name.value + r.age.value
+    })
+
+    setTimeout(() => {
+      r.name.value = "Jack"
+    }, 1000)
+  </script> -->
+
+  <!-- 8. toRef 的实现 -->
+  <script type="module">
+    // import { watchEffect, ref, reactive, toRef } from '/node_modules/@vue/runtime-dom/dist/runtime-dom.esm-browser.js'
+    import { watchEffect, ref, reactive, toRef } from './reactivity.js'
+    const state1 = reactive({ name: "dell" })
+    const state2 = reactive({ age: 18 })
+
+    const r = { name: toRef(state1, 'name'), age: toRef(state2, 'age') }
+
+    watchEffect(() => {
+      app.innerHTML = r.name.value + r.age.value
+    })
+
+    setTimeout(() => {
+      r.name.value = "Jack"
     }, 1000)
   </script>
 </body>
