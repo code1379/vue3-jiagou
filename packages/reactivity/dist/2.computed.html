@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="app"></div>
+
+  <!-- 
+    /**
+     * 计算属性特点
+     * 1. 不用，不计算
+     * 2. 计算属性得有同步的返回值
+     * 3. 如果依赖的值不变也不重新计算
+     * 4. 计算属性不能修改本身的值，可以去修改其他的属性
+     * 5. 这个可以在模板中当做数据使用
+    */
+  -->
+  <!-- 1.不用不计算 -->
+  <!-- <script type="module">
+    // computed watch watchEffect -> 基于 effect
+    import { reactive, effect, computed } from '/node_modules/@vue/reactivity/dist/reactivity.esm-browser.js'
+    const state = reactive({ firstname: "dell", lastname: "lee", age: 30 })
+
+    const fullname = computed(() => {
+      console.log("computed")
+      return state.firstname + " " + state.lastname
+    })
+  </script> -->
+
+  <!-- 2. 同步的返回值，通过 .value 访问 -->
+  <!-- <script type="module">
+    // computed watch watchEffect -> 基于 effect
+    import { reactive, effect, computed } from '/node_modules/@vue/reactivity/dist/reactivity.esm-browser.js'
+    const state = reactive({ firstname: "dell", lastname: "lee", age: 30 })
+
+    const fullname = computed(() => {
+      console.log("computed")
+      return state.firstname + " " + state.lastname
+    })
+
+    console.log("fullname.value", fullname.value)
+  </script> -->
+
+  <!-- 3. 访问多次，依赖的值不变，不会重新计算（有缓存）-->
+  <!-- <script type="module">
+    // computed watch watchEffect -> 基于 effect
+    import { reactive, effect, computed } from '/node_modules/@vue/reactivity/dist/reactivity.esm-browser.js'
+    const state = reactive({ firstname: "dell", lastname: "lee", age: 30 })
+
+    const fullname = computed(() => {
+      console.log("computed~~")
+      return state.firstname + " " + state.lastname
+    })
+
+    console.log("fullname.value", fullname.value)
+    console.log("fullname.value", fullname.value)
+    console.log("fullname.value", fullname.value)
+  </script> -->
+
+
+  <!-- 4. 不可以被修改-->
+  <!-- <script type="module">
+    // computed watch watchEffect -> 基于 effect
+    import { reactive, effect, computed } from '/node_modules/@vue/reactivity/dist/reactivity.esm-browser.js'
+    const state = reactive({ firstname: "dell", lastname: "lee", age: 30 })
+
+    const fullname = computed(() => {
+      console.log("computed~~")
+      return state.firstname + " " + state.lastname
+    })
+    // ! reactivity.esm-browser.js:1190 Write operation failed: computed value is readonly
+    fullname.value = "jw"
+  </script> -->
+
+  <!-- 5. 通过 get 获取 set 修改 -->
+  <!-- <script type="module">
+    // computed watch watchEffect -> 基于 effect
+    import { reactive, effect, computed } from '/node_modules/@vue/reactivity/dist/reactivity.esm-browser.js'
+    const state = reactive({ firstname: "dell", lastname: "lee", age: 30 })
+
+    const fullname = computed({
+      get: () => {
+        return `${state.firstname} ${state.lastname}`
+      },
+      set: (val) => {
+        console.log('val', val)
+      }
+    })
+    fullname.value = "jw"
+  </script> -->
+
+  <!-- 6. 响应式 中可以使用-->
+  <script type="module">
+    // computed watch watchEffect -> 基于 effect
+    import { reactive, effect, computed } from '/node_modules/@vue/reactivity/dist/reactivity.esm-browser.js'
+    const state = reactive({ firstname: "dell", lastname: "lee", age: 30 })
+
+    const fullname = computed({
+      get: () => {
+        return `${state.firstname} ${state.lastname}`
+      },
+      set: (val) => {
+        console.log('val', val)
+      }
+    })
+
+    // 计算属性也是一个 effect，依赖的状态会收集计算属性的 effect
+    // 计算属性会触发他收集的effect
+
+    effect(() => { // 计算属性额可以收集effect
+      console.log("fullname", fullname.value)
+    })
+
+    setTimeout(() => {
+      state.firstname = "jelly"
+    }, 1000)
+  </script>
+
+  <!--  -->
+  <!-- <script type="module">
+    import { reactive, effect } from './reactivity.js'
+  </script> -->
+
+
+</body>
+
+</html>
