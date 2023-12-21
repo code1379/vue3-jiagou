@@ -206,9 +206,15 @@ function watch(source, cb, options = {}) {
     getter = source;
   }
   let oldValue = void 0;
+  let clean = null;
+  const onCleanup = (fn) => {
+    clean = fn;
+  };
   const job = () => {
+    if (clean)
+      clean();
     const newValue = effect2.run();
-    cb(newValue, oldValue);
+    cb(newValue, oldValue, onCleanup);
     oldValue = newValue;
   };
   const effect2 = new ReactiveEffect(getter, job);

@@ -26,10 +26,15 @@ export function watch(source, cb, options: any = {}) {
   }
 
   let oldValue = undefined;
+  let clean = null;
 
+  const onCleanup = (fn) => {
+    clean = fn;
+  };
   const job = () => {
+    if (clean) clean();
     const newValue = effect.run();
-    cb(newValue, oldValue);
+    cb(newValue, oldValue, onCleanup);
     oldValue = newValue;
   };
 

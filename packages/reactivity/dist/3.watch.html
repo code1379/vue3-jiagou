@@ -210,7 +210,7 @@
       12 -> 2s返回 cba
       当发生下一次请求的时候，需要做一些额外的清理操作
     -->
-  <script type="module">
+  <!-- <script type="module">
     // computed watch watchEffect -> 基于 effect
     import { reactive, effect, computed, watch } from '/node_modules/@vue/runtime-dom/dist/runtime-dom.esm-browser.js'
     // import { reactive, effect, computed, watch } from './reactivity.js'
@@ -250,7 +250,58 @@
 
     state.n = "1"
     state.n = "12"
+  </script> -->
+
+  <!-- 7. 竟态问题 - 实现 onCleanup -->
+  <!-- 
+        watch 监听输入框，发送请求，返回列表，竟态问题
+        1 -> 3s返回 abc
+        12 -> 2s返回 cba
+        当发生下一次请求的时候，需要做一些额外的清理操作
+      -->
+  <script type="module">
+    // computed watch watchEffect -> 基于 effect
+    // import { reactive, effect, computed, watch } from '/node_modules/@vue/runtime-dom/dist/runtime-dom.esm-browser.js'
+    import { reactive, effect, computed, watch } from './reactivity.js'
+    const state = reactive({ firstname: "dell", lastname: "lee", age: 30, input: "" })
+
+    const map = {
+      1: {
+        timer: 3000,
+        returnVal: "abc"
+      },
+      12: {
+        timer: 2000,
+        returnVal: "cba"
+      }
+    }
+
+    function getData(val) {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(map[val].returnVal)
+        }, map[val].timer)
+      })
+    }
+
+    let arr = []
+    // 默认 watch 内部实现了 scheduler，我们把它改成了同步的
+    watch(() => state.n, async (newVal, oldVal, onCleanup) => {
+      let flag = true
+      onCleanup(() => {
+        flag = false
+      })
+      const r = await getData(newVal)
+      flag && (app.innerHTML = r)
+    }, {
+      flush: "sync"
+    })
+
+    state.n = "1"
+    state.n = "12"
   </script>
+
+
 </body>
 
 </html>
