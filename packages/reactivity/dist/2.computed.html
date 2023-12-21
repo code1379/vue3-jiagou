@@ -122,7 +122,7 @@
   </script> -->
 
   <!-- 1. 基本的实现 通过 .value 访问 computed 的计算值-->
-  <script type="module">
+  <!-- <script type="module">
     import { reactive, effect, computed } from './reactivity.js'
 
     const state = reactive({ firstname: "dell", lastname: "lee", age: 30 })
@@ -133,8 +133,36 @@
     })
 
     console.log(fullname.value)
-  </script>
+  </script> -->
 
+  <!-- 2. 依赖的值改变 -->
+  <script type="module">
+    import { reactive, effect, computed } from './reactivity.js'
+
+    const state = reactive({ firstname: "dell", lastname: "lee", age: 30 })
+
+    const fullname = computed(() => {
+      console.log("computed")
+      return state.firstname + " " + state.lastname
+    })
+
+    effect(() => {
+      console.log("fullname", fullname.value)
+    })
+
+
+    setTimeout(() => {
+      state.firstname = "jelly"
+    }, 1000)
+
+    // computed （本身是一个 effect）
+    // firstname => Set(e1) lastname => Set(e1)
+
+    // value => Set(e2) // 这里我们需要进行依赖收集
+  
+    // 当修改 state.firstname 时，会触发 e1 重新执行， fullname 会重新计算，这个时候需要让 e2 重新执行
+
+  </script>
 
 </body>
 

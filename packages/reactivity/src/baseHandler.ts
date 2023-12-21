@@ -53,13 +53,17 @@ function track(target, key) {
       depsMap.set(key, (effects = new Set()));
     }
 
-    let shouldTrack = !effects.has(activeEffect);
-    if (shouldTrack) {
-      // 1. 属性关联 effect
-      effects.add(activeEffect);
-      // 2. effect 关联属性
-      activeEffect.deps.push(effects);
-    }
+    trackEffects(effects);
+  }
+}
+
+export function trackEffects(effects) {
+  let shouldTrack = !effects.has(activeEffect);
+  if (shouldTrack) {
+    // 1. 属性关联 effect
+    effects.add(activeEffect);
+    // 2. effect 关联属性
+    activeEffect.deps.push(effects);
   }
 }
 
@@ -68,6 +72,10 @@ function trigger(target, key, newValue, oldValue) {
   if (!depsMap) return;
 
   const effects = depsMap.get(key);
+  triggerEffects(effects);
+}
+
+export function triggerEffects(effects) {
   if (effects.size > 0) {
     [...effects].forEach((effect) => {
       // 当前正在执行的和要执行的 effect 是同一个 effect，就屏蔽掉

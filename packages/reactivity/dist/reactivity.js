@@ -80,11 +80,14 @@ function track(target, key) {
     if (!effects) {
       depsMap.set(key, effects = /* @__PURE__ */ new Set());
     }
-    let shouldTrack = !effects.has(activeEffect);
-    if (shouldTrack) {
-      effects.add(activeEffect);
-      activeEffect.deps.push(effects);
-    }
+    trackEffects(effects);
+  }
+}
+function trackEffects(effects) {
+  let shouldTrack = !effects.has(activeEffect);
+  if (shouldTrack) {
+    effects.add(activeEffect);
+    activeEffect.deps.push(effects);
   }
 }
 function trigger(target, key, newValue, oldValue) {
@@ -92,6 +95,9 @@ function trigger(target, key, newValue, oldValue) {
   if (!depsMap)
     return;
   const effects = depsMap.get(key);
+  triggerEffects(effects);
+}
+function triggerEffects(effects) {
   if (effects.size > 0) {
     [...effects].forEach((effect2) => {
       if (effect2 !== activeEffect && !isParentEffect(effect2)) {
@@ -138,9 +144,15 @@ var ComputedRefImpl = class {
   constructor(getter, setter) {
     this.getter = getter;
     this.setter = setter;
-    this.effect = new ReactiveEffect(getter, {});
+    this.dep = /* @__PURE__ */ new Set();
+    this.effect = new ReactiveEffect(getter, () => {
+      triggerEffects(this.dep);
+    });
   }
   get value() {
+    if (activeEffect) {
+      trackEffects(this.dep);
+    }
     this._value = this.effect.run();
     return this._value;
   }
