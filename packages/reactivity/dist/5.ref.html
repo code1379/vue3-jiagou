@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="app"></div>
+
+  <!-- 1. ref 的基本用法 - 普通值 -->
+  <!-- <script type="module">
+    import { watchEffect, ref } from '/node_modules/@vue/runtime-dom/dist/runtime-dom.esm-browser.js'
+    const flag = ref(true)
+    // 普通值，包装成对象（装包）
+    watchEffect(() => {
+      app.innerHTML = flag.value ? 1 : 0
+    })
+
+    setTimeout(() => {
+      flag.value = !flag.value
+    }, 1000)
+  </script> -->
+
+  <!-- 2. ref 的基本用法 - 对象 -->
+  <script type="module">
+    import { watchEffect, ref } from '/node_modules/@vue/runtime-dom/dist/runtime-dom.esm-browser.js'
+    const person = ref({ name: "dell" })
+    console.log(person.value)
+  </script>
+
+</body>
+
+</html>
